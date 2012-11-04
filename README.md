@@ -12,6 +12,8 @@ NOTE: this class is not feature complete. It is specifically tailored to suit th
 ##how to use
 The Framework is accompanied by a small demo app which you can use to test the available features of the tracker:<br/>
 
+<B>Also vailable via cocoapods</b>
+
 --
 
 ###The Tracker has the following Properties and methods
