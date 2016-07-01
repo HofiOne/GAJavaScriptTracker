@@ -78,7 +78,12 @@ static NSString* GAEscapeNSString(NSString* value) {
     return self;
 }
 
-//starts this tracker
+- (void)dealloc {
+    if ([self isRunning])
+        [self stop];
+}
+
+// Starts this tracker
 -(void)start {
     assert(NO == [self isRunning]);
     
@@ -113,10 +118,11 @@ static NSString* GAEscapeNSString(NSString* value) {
         self.batchInterval = _batchInterval;
     }
     else
-        NSLog(@"[GAJST] engine already running!");
+        if(self.debug)
+            NSLog(@"[GAJST] engine already running!");
 }
 
-//stops this tracker
+// Stops this tracker
 -(void)stop {
     assert([self isRunning]);
 
@@ -131,10 +137,11 @@ static NSString* GAEscapeNSString(NSString* value) {
         _JSEngine = nil;
     }
     else
-        NSLog(@"[GAJST] engine already stopped!");
+        if(self.debug)
+            NSLog(@"[GAJST] engine already stopped!");
 }
 
-//is it running?
+// Is it running?
 - (BOOL)isRunning {
     if(self.debug)
         NSLog(@"[GAJST] checking for engine");

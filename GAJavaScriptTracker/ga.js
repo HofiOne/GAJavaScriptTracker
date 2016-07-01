@@ -1838,6 +1838,9 @@
             }
             d && (d.q = f)
         };
+    //
+    // http will be banned forever soon, do not use if you do not have to
+    //
     //var ye = "https:" == J[y][z] ? "https://ssl.google-analytics.com" : "http://www.google-analytics.com",
     var ye = "https://www.google-analytics.com",
         ze = function (a) {

@@ -24,23 +24,23 @@
 + (id)trackerWithAccountID:(NSString *)accountID;
 
 /**
- * starts this tracker
+ * Starts this tracker
  */
 -(void)start;
 
 /**
- * stops this tracker, flushing any calls left
+ * Stops this tracker, flushing any calls left
  */
 -(void)stop;
 
 /**
- * the Google Analytics account ID for this tracker
+ * The Google Analytics account ID for this tracker
  * @return account ID
  */
 @property(readonly) NSString *accountID;
 
 /**
- * is the tracker running?
+ * Is the tracker running?
  * @return BOOL with the state
  */
 @property(readonly,getter = isRunning) BOOL running;
@@ -54,7 +54,7 @@
 @property(nonatomic) NSUInteger batchSize;
 
 /**
- * the max interval for dispatching batches
+ * The max interval for dispatching batches
  * @return the maxium time to wait between network requests (if a batch gets filled)
  * @warning batching will influence the timestamp and can modify the results in Google Analytics if the time interval is chosen too large!
  */
@@ -69,7 +69,7 @@
 @property(readwrite) BOOL debug;
 
 /**
- * a visible that can be used webview INSTEAD of the internal/invisble one used normally. For debug purposes
+ * A visible that can be used webview INSTEAD of the internal/invisble one used normally. For debug purposes
  * @return a webview for debugging. NIL in 'normal' mode/when not set
  * @warning Don't set in production mode or while the tracker is running
  */
