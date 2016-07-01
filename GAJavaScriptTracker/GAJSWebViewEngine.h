@@ -44,7 +44,7 @@
 /**
  * the max interval for dispatching batches
  */
-@property(nonatomic) NSTimeInterval batchInterval;
+@property(nonatomic, assign) NSTimeInterval batchInterval;
 
 /**
  * enqueues JavaScript to be executed when batch is full

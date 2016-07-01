@@ -1838,7 +1838,8 @@
             }
             d && (d.q = f)
         };
-    var ye = "https:" == J[y][z] ? "https://ssl.google-analytics.com" : "http://www.google-analytics.com",
+    //var ye = "https:" == J[y][z] ? "https://ssl.google-analytics.com" : "http://www.google-analytics.com",
+    var ye = "https://www.google-analytics.com",
         ze = function (a) {
             ga(this, "len");
             this.message = a + "-8192"

@@ -10,7 +10,7 @@
 
 #define ELog(x,...) /* NSLog */
 
-@interface GAJSWebViewEngine ()
+@interface GAJSWebViewEngine () <WebUIDelegate, WebResourceLoadDelegate, WebFrameLoadDelegate>
 @property(nonatomic, readwrite) WebView *webView;
 @end
 
@@ -26,6 +26,13 @@
 @synthesize batchSize=_batchSize;
 @synthesize batchInterval=_batchInterval;
 @synthesize debugwebview=_debugwebview;
+
+- (void)dealloc {
+    _webView.UIDelegate = nil;
+    _webView.resourceLoadDelegate = nil;
+    _webView.frameLoadDelegate = nil;
+    _webView = nil;
+}
 
 - (WebView*)createWebView {
     WebView *webView; 
@@ -132,8 +139,8 @@
         [_webViewPendingScripts removeAllObjects];
     }
     else {
-        
-        _webView = [self createWebView];
+        if (_webView == nil)
+            _webView = [self createWebView];
     }
 }
 

@@ -80,51 +80,58 @@ static NSString* GAEscapeNSString(NSString* value) {
 
 //starts this tracker
 -(void)start {
-    assert(!_JSEngine);
+    assert(NO == [self isRunning]);
     
-    if(self.debug)
-        NSLog(@"[GAJST] allocate engine");
-    
-    _JSEngine = [[GAJSWebViewEngine alloc] init];
-    if(!_JSEngine) {
-        @throw [NSException exceptionWithName:@"GAJSException"
-                                       reason:@"Failed to load JavaScriptEngine"
-                                     userInfo:nil];
+    if (NO == [self isRunning]) {
+        if(self.debug)
+            NSLog(@"[GAJST] allocate engine");
+        
+        _JSEngine = [[GAJSWebViewEngine alloc] init];
+        if(!_JSEngine) {
+            @throw [NSException exceptionWithName:@"GAJSException"
+                                           reason:@"Failed to load JavaScriptEngine"
+                                         userInfo:nil];
+        }
+        
+        
+        id anonymize = @"_gaq.push(['_anonymizeIp']);";
+        id str = [NSString stringWithFormat:@"var _gaq = _gaq || [];\n\
+                  _gaq.push(['_setAccount', '%@']);\n\
+                  _gaq.push(['_setDomainName', 'none']);\n\
+                  %@", _accountID, _anonymizeIp ? anonymize : @""];
+        
+        if(self.debug)
+            NSLog(@"[GAJST] Load html and set INITIAL_GA: %@", str);
+        
+        _JSEngine.htmlName = @"main";
+        _JSEngine.htmlVariables = [NSDictionary dictionaryWithObject:str forKey:@"INITIAL_GA"];
+        _JSEngine.debugwebview = _debugwebview;
+        if(self.debug)
+            [_JSEngine runJS:@"alert(_gaq)"];
+        
+        self.batchSize = _batchSize;
+        self.batchInterval = _batchInterval;
     }
-    
-    
-    id anonymize = @"_gaq.push(['_anonymizeIp']);";
-    id str = [NSString stringWithFormat:@"var _gaq = _gaq || [];\n\
-              _gaq.push(['_setAccount', '%@']);\n\
-              _gaq.push(['_setDomainName', 'none']);\n\
-              %@", _accountID, _anonymizeIp ? anonymize : @""];
-    
-    if(self.debug)
-        NSLog(@"[GAJST] Load html and set INITIAL_GA: %@", str);
-    
-    _JSEngine.htmlName = @"main";
-    _JSEngine.htmlVariables = [NSDictionary dictionaryWithObject:str forKey:@"INITIAL_GA"];
-    _JSEngine.debugwebview = _debugwebview;
-    if(self.debug)
-        [_JSEngine runJS:@"alert(_gaq)"];
-    
-    self.batchSize = _batchSize;
-    self.batchInterval = _batchInterval;
-    
+    else
+        NSLog(@"[GAJST] engine already running!");
 }
 
 //stops this tracker
 -(void)stop {
-    assert(_JSEngine);
-    
-    if(self.debug)
-        NSLog(@"[GAJST] flush the engine [if the webview is not loaded, this may loose a batch.]");
-    [_JSEngine flushJS];
-    
-    if(self.debug)
-        NSLog(@"[GAJST] release engine");
-    
-    _JSEngine = nil;
+    assert([self isRunning]);
+
+    if ([self isRunning]) {
+        if(self.debug)
+            NSLog(@"[GAJST] flush the engine [if the webview is not loaded, this may loose a batch.]");
+        [_JSEngine flushJS];
+        
+        if(self.debug)
+            NSLog(@"[GAJST] release engine");
+        
+        _JSEngine = nil;
+    }
+    else
+        NSLog(@"[GAJST] engine already stopped!");
 }
 
 //is it running?
